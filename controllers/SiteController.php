@@ -61,7 +61,9 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        return $this->render('index');
+        return $this->render('index', [
+            'loginModel' => new LoginForm()
+        ]);
     }
 
     /**
@@ -81,7 +83,7 @@ class SiteController extends Controller
         }
 
         $model->password = '';
-        return $this->render('login', [
+        return $this->renderPartial('login', [
             'model' => $model,
         ]);
     }

@@ -61,9 +61,7 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        return $this->render('index', [
-            'loginModel' => new LoginForm()
-        ]);
+        return $this->render('index');
     }
 
     /**
@@ -72,7 +70,7 @@ class SiteController extends Controller
      * @return Response|string
      */
     public function actionLogin()
-    {
+    {        
         if (!Yii::$app->user->isGuest) {
             return $this->goHome();
         }
@@ -83,7 +81,7 @@ class SiteController extends Controller
         }
 
         $model->password = '';
-        return $this->renderPartial('login', [
+        return $this->render('login', [
             'model' => $model,
         ]);
     }

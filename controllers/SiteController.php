@@ -8,7 +8,8 @@ use yii\web\Controller;
 use yii\web\Response;
 use yii\filters\VerbFilter;
 use app\models\LoginForm;
-use app\models\ContactForm;
+use yii\data\ActiveDataProvider;
+use app\models\Attendance;
 
 class SiteController extends Controller
 {
@@ -61,7 +62,14 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        return $this->render('index');
+        $dataProvider = new ActiveDataProvider([
+            'query' => Attendance::find()->orderBy(['type' => SORT_DESC, 'id' => SORT_ASC]),
+            'pagination' => [
+                'pageSize' => 20,
+            ],
+        ]);
+
+        return $this->render('index', ['dataProvider' => $dataProvider]);
     }
 
     /**
@@ -99,24 +107,6 @@ class SiteController extends Controller
     }
 
     /**
-     * Displays contact page.
-     *
-     * @return Response|string
-     */
-    public function actionContact()
-    {
-        $model = new ContactForm();
-        if ($model->load(Yii::$app->request->post()) && $model->contact(Yii::$app->params['adminEmail'])) {
-            Yii::$app->session->setFlash('contactFormSubmitted');
-
-            return $this->refresh();
-        }
-        return $this->render('contact', [
-            'model' => $model,
-        ]);
-    }
-
-    /**
      * Displays about page.
      *
      * @return string
@@ -124,5 +114,25 @@ class SiteController extends Controller
     public function actionAbout()
     {
         return $this->render('about');
+    }
+    
+    public function actionSetAttendance()
+    {        
+        $post = Yii::$app->request->post();
+        $msg = ['save' => true];
+        
+        $model = new Attendance();
+        $model->setAttribute('type', $post['type']);
+        $model->setQueueId();
+        
+        if(Yii::$app->user->id){
+            $model->setAttribute('user_id', Yii::$app->user->id);
+        }
+
+        if(!$model->save()){
+            $msg = ['save' => false];
+        }
+
+        echo json_encode($msg);
     }
 }

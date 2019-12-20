@@ -11,6 +11,11 @@ class User extends ActiveRecord implements IdentityInterface
     public $authKey;
     public $accessToken;
     
+    public static function tableName()
+    {
+        return 'sgsdb.user';
+    }
+    
     public function findByUsername($username, $profile = null)
     {
         if(is_null($profile)) {

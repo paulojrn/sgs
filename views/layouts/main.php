@@ -11,6 +11,28 @@ use yii\widgets\Breadcrumbs;
 use app\assets\AppAsset;
 
 AppAsset::register($this);
+
+$options = [
+    ['label' => 'Inicial', 'url' => ['/site/index']],
+    ['label' => 'Sobre', 'url' => ['/site/about']]];
+
+if(Yii::$app->user->isGuest){
+    $options[] = ['label' => 'Login', 'url' => ['/site/login']];
+} else {
+    if(Yii::$app->user->identity->profile == 'G'){
+        $options[] = ['label' => 'Administrativo', 'url' => ['/site/index']];
+    }
+    
+    $options[] = '<li>'
+                . Html::beginForm(['/site/logout'], 'post')
+                . Html::submitButton(
+                    'Logout (' . Yii::$app->user->identity->username . ')',
+                    ['class' => 'btn btn-link logout']
+                )
+                . Html::endForm()
+                . '</li>';
+}
+
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
@@ -35,23 +57,7 @@ AppAsset::register($this);
     ]);
     echo Nav::widget([
         'options' => ['class' => 'navbar-nav navbar-left'],
-        'items' => [
-            ['label' => 'Inicial', 'url' => ['/site/index']],
-            ['label' => 'Sobre', 'url' => ['/site/about']],
-            ['label' => 'Contato', 'url' => ['/site/contact']],
-            Yii::$app->user->isGuest ? (
-                ['label' => 'Login', 'url' => ['/site/login']]
-            ) : (
-                '<li>'
-                . Html::beginForm(['/site/logout'], 'post')
-                . Html::submitButton(
-                    'Logout (' . Yii::$app->user->identity->username . ')',
-                    ['class' => 'btn btn-link logout']
-                )
-                . Html::endForm()
-                . '</li>'
-            )
-        ],
+        'items' => $options,
     ]);
     NavBar::end();
     ?>

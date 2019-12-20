@@ -30,11 +30,11 @@ class Attendance extends ActiveRecord
         
         $session->open();
         
-        if(is_null($session->get('n'))){
+        if(is_null($session->get('n')) || (intval($session->get('n')) > 9999)){
             $session->set('n', 0);
         }
         
-        if(is_null($session->get('p'))){
+        if(is_null($session->get('p')) || (intval($session->get('p')) > 9999)){
             $session->set('p', 0);
         }
         
@@ -52,12 +52,23 @@ class Attendance extends ActiveRecord
         $this->setAttribute('queueid', $queueId);
     }
     
-    public function resetCounters(){
+    public static function resetCounters($param){
         $session = Yii::$app->session;
         $session->open();
         
-        $session->set('n', 0);
-        $session->set('p', 0);
+        switch ($param) {
+            case 'N':
+                $session->set('n', 0);
+                break;
+            case 'P':
+                $session->set('p', 0);
+                break;
+
+            default:
+                $session->set('n', 0);
+                $session->set('p', 0);
+        }
+        
         
         $session->close();
     }

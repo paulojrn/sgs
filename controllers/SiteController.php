@@ -135,4 +135,26 @@ class SiteController extends Controller
 
         echo json_encode($msg);
     }
+    
+    public function actionRemoveAttendance(){
+        $first = Attendance::find()->orderBy(['type' => SORT_DESC, 'id' => SORT_ASC])->one();
+        $msg = ['remove' => true];
+        
+        if(is_null($first)){
+            $msg = ['remove' => false];
+        }
+        else{
+            if(!$first->delete()){
+                $msg = ['remove' => false];
+            }
+        }
+        
+        echo json_encode($msg);
+    }
+    
+    public function actionResetCounters(){
+        $post = Yii::$app->request->post();
+        
+        Attendance::resetCounters($post['param']);
+    }
 }

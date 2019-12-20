@@ -14,7 +14,7 @@ AppAsset::register($this);
 
 $options = [
     ['label' => 'Inicial', 'url' => ['/site/index']],
-    ['label' => 'Sobre', 'url' => ['/site/about']]];
+    /*['label' => 'Sobre', 'url' => ['/site/about']]*/];
 
 if(Yii::$app->user->isGuest){
     $options[] = ['label' => 'Login', 'url' => ['/site/login']];

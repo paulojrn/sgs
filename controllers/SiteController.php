@@ -115,6 +115,11 @@ class SiteController extends Controller
     {
         return $this->render('about');
     }
+
+    public function actionInfo()
+    {
+        return $this->render('info');
+    }
     
     public function actionSetAttendance()
     {        
